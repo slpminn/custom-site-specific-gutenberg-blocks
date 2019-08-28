@@ -9,8 +9,8 @@
 const { __ } = wp.i18n; // Process to develop plugin so it can easily be translated to other languages
 const { registerBlockType, RichText } = wp.blocks;
 
-registerBlockType( 'hbi/dynamicpagealert', {
-	title: 'HBI - Dynamic Page Alert Block',
+registerBlockType( 'daf/dynamicpagealert', {
+	title: 'DAF - Dynamic Page Alert Block',
 	description: 'This block will create a feature link with a box around it.',
 	icon: 'visibility',
 	category: 'common',

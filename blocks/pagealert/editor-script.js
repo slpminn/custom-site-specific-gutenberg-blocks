@@ -1,7 +1,7 @@
 /* This section of the code registers a new block, sets an icon and a category, and indicates what type of fields it'll include. */
 
-wp.blocks.registerBlockType( 'hbi/pagealert', {
-	title: 'HBI - Page Alert Block',
+wp.blocks.registerBlockType( 'daf/pagealert', {
+	title: 'DAF - Page Alert Block',
 	description: 'This block will create a feature link with a box around it.',
 	icon: 'visibility',
 	category: 'common',

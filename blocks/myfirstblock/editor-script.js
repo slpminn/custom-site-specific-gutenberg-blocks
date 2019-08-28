@@ -1,7 +1,7 @@
 /* This section of the code registers a new block, sets an icon and a category, and indicates what type of fields it'll include. */
 
-wp.blocks.registerBlockType( 'hbi/myfirstblock', {
-	title: 'HBI - My First Block',
+wp.blocks.registerBlockType( 'daf/myfirstblock', {
+	title: 'DAF - My First Block',
 	icon: 'welcome-add-page',
 	category: 'common',
 	attributes: {

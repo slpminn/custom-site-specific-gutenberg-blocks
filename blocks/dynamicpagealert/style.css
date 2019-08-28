@@ -1,4 +1,4 @@
-.wp-block-hbi-dynamicpagealert {
+.wp-block-daf-dynamicpagealert {
  
     border-width: 1px;
     border-style: solid;
@@ -7,17 +7,17 @@
     margin: 10px 0px 10px 0px;
 }
 
-.wp-block-hbi-dynamicpagealert h4 {
+.wp-block-daf-dynamicpagealert h4 {
    
 }
 
-.wp-block-hbi-dynamicpagealert h5 {
+.wp-block-daf-dynamicpagealert h5 {
     margin-left: 15px;
     font-size: .90em;
 }
 
-.wp-block-hbi-dynamicpagealert a,
-.wp-block-hbi-dynamicpagealert a:visited,
-.wp-block-hbi-dynamicpagealert a:active {
+.wp-block-daf-dynamicpagealert a,
+.wp-block-daf-dynamicpagealert a:visited,
+.wp-block-daf-dynamicpagealert a:active {
     color: #fff;
 }
