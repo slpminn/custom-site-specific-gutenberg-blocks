@@ -201,13 +201,40 @@ defined( 'ABSPATH' ) || die();
              */
             function dafEMC01CB($att) {
 
-                $html = "<div class='wp-block-daf-emc01'>".
-                        "   <h4>E-MC-01</h4>".
-                        "   <h5>Category:${att['blockcategory']}</a></h5>".
-                        "   <h5>First Story:${att['blockfirststory']}</a></h5>".
-                        "   <h5>No of Stories:${att['blocknoofstories']}</a></h5>".
-                        "   <h5>Story Id:${att['blockstoryid']}</a></h5>".
-                        '</div>';
+                $html = ""; 
+
+                // The Query Arguments
+                $args = array(
+                    'cat' => $att['blockcategory'],
+                    'posts_per_page' => $att['blocknoofstories'],
+                    'nopaging', true
+                );
+
+                //The Query
+                $the_query = new WP_Query( $args );
+
+                // The Loop
+                if( $the_query->have_posts()) {
+                    $html .= "<div class='wp-block-daf-emc01 col-md-${att['blockcolumnsondesktop']}'>";
+                    $html .= '<h2 class="cat-title">'.get_cat_name($att['blockcategory']).'</h2>';
+                    $html .= '<ul>';
+                    while ($the_query -> have_posts() ) {
+                        $the_query->the_post();
+                        $html .= '<li class="cat-post">'.
+                                    '<a class="cat-post-item-link" href="'.get_post_permalink().'">'.
+                                    '<div class="row">'.
+                                    '<div class="col-12 col-lg-3 cat-post-item-thumbnail"><img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'"></div>'.
+                                    '<div class="col-12 col-lg-9 cat-post-item-title">'.get_the_title().'</div>'.
+                                    '</div>'.
+                                    '</a>'.
+                                    '</li>';
+                    }
+                    $html .= '</ul>';
+                    $html .= "</div>";
+                }
+                // Restore original Post Data
+                wp_reset_postData();
+
                 return $html; 
             
             } 

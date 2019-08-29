@@ -16,8 +16,44 @@
     font-size: .90em;
 }
 
-.wp-block-daf-emc01 a,
+.wp-block-daf-emc01 a:link,
 .wp-block-daf-emc01 a:visited,
+.wp-block-daf-emc01 a:hover, 
 .wp-block-daf-emc01 a:active {
     color: #fff;
 }
+
+.wp-block-daf-emc01 ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.wp-block-daf-emc01 li {
+    margin: 5px 0 5px 0;
+}
+
+
+.wp-block-daf-emc01 .cat-title {
+    border: 1px solid darkblue;
+    background: #343a40;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 10px 10px 10px 10px;
+}
+
+.wp-block-daf-emc01 .cat-post-item-title {
+    vertical-align: top;
+}
+
+.wp-block-daf-emc01 .cat-post-item-thumbnail {
+}
+
+.wp-block-daf-emc01 a.cat-post-item-link:link,
+.wp-block-daf-emc01 a.cat-post-item-link:visited,
+.wp-block-daf-emc01 a.cat-post-item-link:hover, 
+.wp-block-daf-emc01 a.cat-post-item-link:active {
+    color: darkslateblue;
+}
+

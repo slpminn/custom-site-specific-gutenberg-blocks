@@ -6,8 +6,8 @@
 
 
  //Required components
-const { __ } = wp.i18n; // Process to develop plugin so it can easily be translated to other languages
-const { registerBlockType, RichText } = wp.blocks;
+var { __ } = wp.i18n; // Process to develop plugin so it can easily be translated to other languages
+var { registerBlockType, RichText } = wp.blocks;
 
 registerBlockType( 'daf/dynamicpagealert', {
 	title: 'DAF - Dynamic Page Alert Block',
@@ -24,7 +24,7 @@ registerBlockType( 'daf/dynamicpagealert', {
 	/* This configures how the content and color fields will work, and sets up the necessary elements */
 	
 	edit: function( props ) {
-		console.log( 'edit-props', props );
+		console.log( 'dynamicpagealert - edit-props', props );
 		function updateTitle(event) {
 			props.setAttributes({alerttitle: event.target.value})
 		}
@@ -53,7 +53,7 @@ registerBlockType( 'daf/dynamicpagealert', {
 	},
 
 	save: function(props) {
-		console.log( 'save-props', props );
+		console.log( 'dynamicpagealert - save-props', props );
 		return null; // Return controlled by php.
 	}
 }); //End registerBlockType
