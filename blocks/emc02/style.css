@@ -1,0 +1,55 @@
+.wp-block-daf-emc02 {
+ 
+    border-width: 1px;
+    border-style: solid;
+    border-color: #000;
+    padding: 20px;
+    margin: 10px 0px 10px 0px;
+}
+
+.wp-block-daf-emc02 .cat-post-featured-item-banner {
+    border: 1px solid darkred;
+    background: red;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 10px 10px 10px 10px;
+}
+
+.wp-block-daf-emc02 .cat-post-featured-item-thumbnail {
+    margin: 0px 0px 5px 0px;
+}
+
+.wp-block-daf-emc02 .cat-post-featured-item-title {
+    font-size: 1.5em;
+    margin: 0px 0px 5px 0px;
+}
+
+.wp-block-daf-emc02 .cat-post-featured-item-excerpt {
+    font-size: .90em;
+    margin: 0;
+}
+
+.wp-block-daf-emc02 a.cat-post-featured-item-link:link,
+.wp-block-daf-emc02 a.cat-post-featured-item-link:visited,
+.wp-block-daf-emc02 a.cat-post-featured-item-link:hover, 
+.wp-block-daf-emc02 a.cat-post-featured-item-link:active {
+    color: darkslateblue;
+}
+
+.wp-block-daf-emc02 .cat-post-item-title {
+    vertical-align: top;
+}
+
+.wp-block-daf-emc02 .cat-post-item-thumbnail {
+    margin: 0px 0px 5px 0px;
+}
+
+
+.wp-block-daf-emc02 a.cat-post-item-link:link,
+.wp-block-daf-emc02 a.cat-post-item-link:visited,
+.wp-block-daf-emc02 a.cat-post-item-link:hover, 
+.wp-block-daf-emc02 a.cat-post-item-link:active {
+    color: darkslateblue;
+}
+

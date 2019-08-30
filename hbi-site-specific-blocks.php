@@ -167,8 +167,79 @@ defined( 'ABSPATH' ) || die();
                     'render_callback' => 'dafEMC01CB', // The render callback
                 )
             );            
+
+            /*
+            Register Dynamic E-MC-02 Custom Block
+             */
+            wp_register_script(
+                'daf-emc02-editor', //name of the script
+                plugins_url('/blocks/emc02/editor-script.js', __FILE__), // URL of script
+                array(  // Dependencies required by Gutenberg
+                    'wp-blocks',
+                    'wp-element'
+                )
+            );
+             // Register global block CSS - Loads on the Front End and the Editor
+            wp_register_style(
+                'daf-emc02', //name of the script
+                plugins_url('/blocks/emc02/style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc01/style.css') // Everytime it is update clear style from cash
+            );
+            // Register editor only block CSS - Loads on the Editor only
+            wp_register_style(
+                'daf-emc02-editor', //name of the script
+                plugins_url('/blocks/emc02/editor-style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc01/editor-style.css') // Everytime it is update clear style from cash
+            );
+            // Register the block type
+            register_block_type(
+                'daf/emc02', //name of the block.(Plugin/Block)
+                array (
+                    'editor_script' => 'daf-emc02-editor',
+                    'editor_style' => 'daf-emc02-editor',
+                    'style' => 'daf-emc02',
+                    'render_callback' => 'dafEMC02CB', // The render callback
+                )
+            );                        
             
-            
+            /*
+            Register Dynamic E-MC-03 Custom Block
+             */
+            wp_register_script(
+                'daf-emc03-editor', //name of the script
+                plugins_url('/blocks/emc03/editor-script.js', __FILE__), // URL of script
+                array(  // Dependencies required by Gutenberg
+                    'wp-blocks',
+                    'wp-element'
+                )
+            );
+             // Register global block CSS - Loads on the Front End and the Editor
+            wp_register_style(
+                'daf-emc03', //name of the script
+                plugins_url('/blocks/emc03/style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc03/style.css') // Everytime it is update clear style from cash
+            );
+            // Register editor only block CSS - Loads on the Editor only
+            wp_register_style(
+                'daf-emc03-editor', //name of the script
+                plugins_url('/blocks/emc03/editor-style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc03/editor-style.css') // Everytime it is update clear style from cash
+            );
+            // Register the block type
+            register_block_type(
+                'daf/emc03', //name of the block.(Plugin/Block)
+                array (
+                    'editor_script' => 'daf-emc03-editor',
+                    'editor_style' => 'daf-emc03-editor',
+                    'style' => 'daf-emc03',
+                    'render_callback' => 'dafEMC03CB', // The render callback
+                )
+            );  
+
         } //end of daf_block()
 
     /**
@@ -207,7 +278,12 @@ defined( 'ABSPATH' ) || die();
                 $args = array(
                     'cat' => $att['blockcategory'],
                     'posts_per_page' => $att['blocknoofstories'],
-                    'nopaging', true
+                     // Optimization Query Parameters//
+                     'nopaging' => true, //false: use pages, true: do not use paging
+                     'udpate_post_term_cache' => false, //grabs terms, remove if terms required
+                     'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
+                     'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
+                     'cache_results' => false, // Post information cache
                 );
 
                 //The Query
@@ -238,6 +314,165 @@ defined( 'ABSPATH' ) || die();
                 return $html; 
             
             } 
+
+ /**
+             * CALLBACK Function for Dynamic E-MC-02 Custom Block
+             * Render callback for the dynamic block.
+             * Instead of rendering from the block's save(), this callback will render the front-end
+             * 
+             * @param $att Attributes from the JS Block
+             * @return string Rendered HTML
+             */
+            function dafEMC02CB($att) {
+
+                $html = ""; 
+ 
+                if ($att['blockfirststory'] > 0) $offset = $att['blockfirststory'] - 1;
+                else $offset = 0;
+                
+                // Retrieve the Sticky Posts
+                $args1 = array(
+                    'post_type' => 'post',
+                    'post_status' => 'publish',
+                    'cat' => $att['blockcategory'],
+                    'post__in' => get_option('sticky_posts'),
+                    'posts_per_page' => $att['blocknoofstories'],
+                    // Optimization Query Parameters//
+                    'nopaging' => true, //false: use pages, true: do not use paging,
+                    'udpate_post_term_cache' => false, //grabs terms, remove if terms required
+                    'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
+                    'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
+                    'cache_results' => false, // Post information cache
+                );
+                $the_query1 = new WP_Query( $args1 ); // Retrieve Sticky Posts
+
+                //Retrieve none Sticky Posts
+                $calc_post_per_page = $att['blocknoofstories'] - count($the_query1->posts);
+              
+                $args2 = array(
+                    'post_type' => 'post',
+                    'post_status' => 'publish',
+                    'cat' => $att['blockcategory'],
+                    'post__not_in' => get_option('sticky_posts'),
+                    'ignore_sticky_posts' => true,
+                    'posts_per_page' => $calc_post_per_page,
+                    // Optimization Query Parameters//
+                    'nopaging' => true, //false: use pages, true: do not use paging
+                    'udpate_post_term_cache' => false, //grabs terms, remove if terms required
+                    'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
+                    'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
+                    'cache_results' => false, // Post information cache
+
+                );
+                $the_query2 = new WP_Query( $args2 ); // Retrieve Non-Sticky Posts
+                //return count($the_query2->posts);
+
+                // Merge both queries into one.
+                $the_query = new WP_Query(); // Container for all the posts
+                $the_query->posts = array_merge($the_query1->posts, $the_query2->posts);
+                $the_query->post_count = count($the_query->posts); //Set the post count correctly so as to enable the looping
+                //return count($the_query->posts);
+
+                //return $the_query->post_count;
+                // The Loop
+                if( $the_query->have_posts()) {
+                    $postCount = 1;
+                    $html .= "<div class='wp-block-daf-emc02 col-md-${att['blockcolumnsondesktop']}'>".
+                             '<div class="row">';
+                    while ($the_query -> have_posts() ) {
+                        $the_query->the_post();
+                        if ($postCount == 1) {
+                            if (get_field("acf_post_featured_banner") == 1) {
+                                $html .= '<h2 class="col-12 cat-post-featured-item-banner">Featured Location</h2>';
+                            }
+                            $html .=  '<div class="col-12 cat-post-featured-item-thumbnail">'.
+                                     '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.                                                
+                                     '<img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'">'.
+                                     '</a>'.
+                                     '</div>'.
+                                     '<div class="col-12 cat-post-featured-item-title">'.
+                                     '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
+                                     get_the_title().
+                                     '</a>'.
+                                     '</div>'.
+                                     '<div class="col-12 cat-post-featured-item-excerpt">'.
+                                     get_the_excerpt().
+                                     '</div>'.
+                                     '<div class="col-12"><hr /></div>';
+                        } else {
+                            $html .=  '<div class="col-12 col-lg-10 cat-post-item-title">'.
+                                      '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
+                                      get_the_title().
+                                      '</a>'. 
+                                      '</div>'.
+                                      '<div class="col-12 col-lg-2 cat-post-item-thumbnail">'.
+                                      '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
+                                      '<img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'">'.
+                                      '</a>'. 
+                                      '</div>';
+                        }
+                        $postCount++;
+                    } // end while
+                    $html .= "</div>".  //  end row
+                            "</div>"; // end main block
+                } // end if have posts
+                // Restore original Post Data
+                wp_reset_postData();
+
+                return $html; 
+            
+            } 
+
+           /**
+             * CALLBACK Function for Dynamic E-MC-03 Custom Block
+             * Render callback for the dynamic block.
+             * Instead of rendering from the block's save(), this callback will render the front-end
+             * 
+             * @param $att Attributes from the JS Block
+             * @return string Rendered HTML
+             */
+            function dafEMC03CB($att) {
+
+                $html = ""; 
+
+                // The Query Arguments
+                $args = array(
+                    'cat' => $att['blockcategory'],
+                    'posts_per_page' => $att['blocknoofstories'],
+                    // Optimization Query Parameters//
+                    'nopaging' => true, //false: use pages, true: do not use paging
+                    'udpate_post_term_cache' => false, //grabs terms, remove if terms required
+                    'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
+                    'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
+                    'cache_results' => false, // Post information cache
+                );
+
+                //The Query
+                $the_query = new WP_Query( $args );
+
+                // The Loop
+                if( $the_query->have_posts()) {
+                    $html .= "<div class='wp-block-daf-emc03 col-md-${att['blockcolumnsondesktop']}'>".
+                             '<h2 class="cat-title">'.get_cat_name($att['blockcategory']).'</h2>'.
+                             '<div class="row">';
+                    while ($the_query -> have_posts() ) {
+                        $the_query->the_post();
+                        $html .=  '<div class="col-12 cat-post-item-title">'.
+                                    '<a class="cat-post-item-link" href="'.get_post_permalink().'">'.
+                                    get_the_title().
+                                    '</a>'.
+                                    '</div>'; //end column
+                    }
+                    $html .= "</div>".  //end row
+                             "</div>"; //end main block
+                }
+                // Restore original Post Data
+                wp_reset_postData();
+
+                return $html; 
+            
+            } 
+
 
 
         // Hook into WordPress
