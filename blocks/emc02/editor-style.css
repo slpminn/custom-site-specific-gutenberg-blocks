@@ -1,7 +1,12 @@
 .wp-block-daf-emc02 {
-    /* Default class */
+  /* Default class */
 }
 
 .wp-block-daf-emc02 .input-field {
-    width: 100%;
+  width: 100%;
+}
+
+.wp-block-daf-emc02 h3 {
+  margin: 0;
+  padding: 0;
 }
