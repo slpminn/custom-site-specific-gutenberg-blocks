@@ -26,8 +26,7 @@ defined( 'ABSPATH' ) || die();
 
 
     if(! function_exists('daf_block')) { //IF01 - Checks if the function already exists.
-        console.log('daf_block function not defined.  Defining function daf_block');
-        function daf_block() { 
+         function daf_block() { 
             // Register the block-building script
             wp_register_script(
                 'daf-myfirstblock-editor', //name of the script
@@ -291,8 +290,9 @@ defined( 'ABSPATH' ) || die();
 
                 // The Loop
                 if( $the_query->have_posts()) {
+                    $postCount = 1;
                     $html .= "<div class='wp-block-daf-emc01 col-md-${att['blockcolumnsondesktop']}'>";
-                    $html .= '<h2 class="cat-title">'.get_cat_name($att['blockcategory']).'</h2>';
+                    $html .= '<div class="cat-title">'.get_cat_name($att['blockcategory']).'</div>';
                     $html .= '<ul>';
                     while ($the_query -> have_posts() ) {
                         $the_query->the_post();
@@ -304,6 +304,8 @@ defined( 'ABSPATH' ) || die();
                                     '</div>'.
                                     '</a>'.
                                     '</li>';
+                        if ($postCount == $att['blocknoofstories']) break;
+                        $postCount++;
                     }
                     $html .= '</ul>';
                     $html .= "</div>";
@@ -344,15 +346,15 @@ defined( 'ABSPATH' ) || die();
                     'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
                     'cache_results' => false, // Post information cache
                 );
-                $the_query1 = new WP_Query( $args1 ); // Retrieve Sticky Posts
+                $the_query_sticky = new WP_Query( $args1 ); // Retrieve Sticky Posts
 
                 //Retrieve none Sticky Posts
-                $calc_post_per_page = $att['blocknoofstories'] - count($the_query1->posts);
+                $calc_post_per_page = $att['blocknoofstories'] - count($the_query_sticky->posts);
               
                 $args2 = array(
                     'post_type' => 'post',
                     'post_status' => 'publish',
-                    'cat' => $att['blockcategory'],
+                    'cat' => $att['blockcategory']+10000,
                     'post__not_in' => get_option('sticky_posts'),
                     'ignore_sticky_posts' => true,
                     'posts_per_page' => $calc_post_per_page,
@@ -364,23 +366,24 @@ defined( 'ABSPATH' ) || die();
                     'cache_results' => false, // Post information cache
 
                 );
-                $the_query2 = new WP_Query( $args2 ); // Retrieve Non-Sticky Posts
-                //return count($the_query2->posts);
+                $the_query_other = new WP_Query( $args2 ); // Retrieve Non-Sticky Posts
+                //return var_dump($the_query2);
 
                 // Merge both queries into one.
-                $the_query = new WP_Query(); // Container for all the posts
-                $the_query->posts = array_merge($the_query1->posts, $the_query2->posts);
-                $the_query->post_count = count($the_query->posts); //Set the post count correctly so as to enable the looping
+                $the_query_all = new WP_Query(); // Container for all the posts
+                $the_query_all->posts = array_merge($the_query_sticky->posts, $the_query_other->posts);
+                $the_query_all->post_count = count($the_query_all->posts); //Set the post count correctly so as to enable the looping
                 //return count($the_query->posts);
 
                 //return $the_query->post_count;
                 // The Loop
-                if( $the_query->have_posts()) {
+                if( $the_query_all->have_posts()) {
                     $postCount = 1;
-                    $html .= "<div class='wp-block-daf-emc02 col-md-${att['blockcolumnsondesktop']}'>".
+                    $html .= '<div class="wp-block-daf-emc02 '.
+                             'col-md-'.$att['blockcolumnsondesktop'].'">'.
                              '<div class="row">';
-                    while ($the_query -> have_posts() ) {
-                        $the_query->the_post();
+                    while ($the_query_all -> have_posts() ) {
+                        $the_query_all->the_post();
                         if ($postCount == 1) {
                             if (get_field("acf_post_featured_banner") == 1) {
                                 $html .= '<h2 class="col-12 cat-post-featured-item-banner">Featured Location</h2>';
@@ -398,19 +401,20 @@ defined( 'ABSPATH' ) || die();
                                      '<div class="col-12 cat-post-featured-item-excerpt">'.
                                      get_the_excerpt().
                                      '</div>'.
-                                     '<div class="col-12"><hr /></div>';
+                                     '<div class="col-12 cat-post-featured-item-separator"><hr width="75%"/></div>';
                         } else {
-                            $html .=  '<div class="col-12 col-lg-10 cat-post-item-title">'.
+                            $html .=  '<div class="col-12 col-md-10 cat-post-item-title">'.
                                       '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
                                       get_the_title().
                                       '</a>'. 
                                       '</div>'.
-                                      '<div class="col-12 col-lg-2 cat-post-item-thumbnail">'.
+                                      '<div class="col-12 col-md-2 cat-post-item-thumbnail">'.
                                       '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
                                       '<img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'">'.
                                       '</a>'. 
                                       '</div>';
                         }
+                        if ($postCount == $att['blocknoofstories']) break;
                         $postCount++;
                     } // end while
                     $html .= "</div>".  //  end row
@@ -452,8 +456,13 @@ defined( 'ABSPATH' ) || die();
 
                 // The Loop
                 if( $the_query->have_posts()) {
-                    $html .= "<div class='wp-block-daf-emc03 col-md-${att['blockcolumnsondesktop']}'>".
-                             '<h2 class="cat-title">'.get_cat_name($att['blockcategory']).'</h2>'.
+                    $postCount = 1;
+                    $html .= '<div class="wp-block-daf-emc03 col-md-'.
+                             $att['blockcolumnsondesktop'].
+                             '">'.
+                            '<div class="cat-title">'.
+                             get_cat_name($att['blockcategory']).
+                             '</div>'.
                              '<div class="row">';
                     while ($the_query -> have_posts() ) {
                         $the_query->the_post();
@@ -462,6 +471,8 @@ defined( 'ABSPATH' ) || die();
                                     get_the_title().
                                     '</a>'.
                                     '</div>'; //end column
+                        if ($postCount == $att['blocknoofstories']) break;
+                        $postCount++;
                     }
                     $html .= "</div>".  //end row
                              "</div>"; //end main block
