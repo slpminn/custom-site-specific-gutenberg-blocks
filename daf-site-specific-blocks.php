@@ -239,6 +239,43 @@ defined( 'ABSPATH' ) || die();
                 )
             );  
 
+            /*
+            Register Dynamic E-MC-04 Custom Block
+             */
+            wp_register_script(
+                'daf-emc04-editor', //name of the script
+                plugins_url('/blocks/emc04/editor-script.js', __FILE__), // URL of script
+                array(  // Dependencies required by Gutenberg
+                    'wp-blocks',
+                    'wp-element'
+                )
+            );
+             // Register global block CSS - Loads on the Front End and the Editor
+            wp_register_style(
+                'daf-emc04', //name of the script
+                plugins_url('/blocks/emc04/style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc04/style.css') // Everytime it is update clear style from cash
+            );
+            // Register editor only block CSS - Loads on the Editor only
+            wp_register_style(
+                'daf-emc04-editor', //name of the script
+                plugins_url('/blocks/emc04/editor-style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc04/editor-style.css') // Everytime it is update clear style from cash
+            );
+            // Register the block type
+            register_block_type(
+                'daf/emc04', //name of the block.(Plugin/Block)
+                array (
+                    'editor_script' => 'daf-emc04-editor',
+                    'editor_style' => 'daf-emc04-editor',
+                    'style' => 'daf-emc04',
+                    'render_callback' => 'dafEMC04CB', // The render callback
+                )
+            );  
+
+
         } //end of daf_block()
 
     /**
@@ -317,7 +354,9 @@ defined( 'ABSPATH' ) || die();
             
             } 
 
- /**
+            //  END CALLBACk for Dynamic E-MC-01 Custom Block
+            
+            /**
              * CALLBACK Function for Dynamic E-MC-02 Custom Block
              * Render callback for the dynamic block.
              * Instead of rendering from the block's save(), this callback will render the front-end
@@ -400,8 +439,8 @@ defined( 'ABSPATH' ) || die();
                                      '</div>'.
                                      '<div class="col-12 cat-post-featured-item-excerpt">'.
                                      get_the_excerpt().
-                                     '</div>'.
-                                     '<div class="col-12 cat-post-featured-item-separator"><hr width="75%"/></div>';
+                                     '</div>';
+                                //     '<div class="col-12 cat-post-featured-item-separator"><hr width="75%"/></div>';
                         } else {
                             $html .=  '<div class="col-12 col-md-10 cat-post-item-title">'.
                                       '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
@@ -420,12 +459,15 @@ defined( 'ABSPATH' ) || die();
                     $html .= "</div>".  //  end row
                             "</div>"; // end main block
                 } // end if have posts
+
                 // Restore original Post Data
                 wp_reset_postData();
 
                 return $html; 
             
             } 
+
+            //  END CALLBACk for Dynamic E-MC-02 Custom Block
 
            /**
              * CALLBACK Function for Dynamic E-MC-03 Custom Block
@@ -476,7 +518,68 @@ defined( 'ABSPATH' ) || die();
                     }
                     $html .= "</div>".  //end row
                              "</div>"; //end main block
-                }
+                } // end if have posts
+
+                // Restore original Post Data
+                wp_reset_postData();
+
+                return $html; 
+            
+            } 
+            //  END CALLBACk for Dynamic E-MC-03 Custom Block                
+            
+            /**
+             * CALLBACK Function for Dynamic E-MC-04 Custom Block
+             * Render callback for the dynamic block.
+             * Instead of rendering from the block's save(), this callback will render the front-end
+             * 
+             * @param $att Attributes from the JS Block
+             * @return string Rendered HTML
+             */
+            function dafEMC04CB($att) {
+
+                $html = ""; 
+
+                // The Query Arguments
+                $args = array(
+                    'cat' => $att['blockcategory'],
+                    'posts_per_page' => $att['blocknoofstories'],
+                    // Optimization Query Parameters//
+                    'nopaging' => true, //false: use pages, true: do not use paging
+                    'udpate_post_term_cache' => false, //grabs terms, remove if terms required
+                    'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
+                    'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
+                    'cache_results' => false, // Post information cache
+                );
+
+                //The Query
+                $the_query = new WP_Query( $args );
+
+                // The Loop
+                if( $the_query->have_posts()) {
+                    $postCount = 1;
+                    $html .= '<div class="wp-block-daf-emc04 col-md-'.
+                             $att['blockcolumnsondesktop'].
+                             '">'.
+                            '<div class="cat-title">'.
+                             get_cat_name($att['blockcategory']).
+                             '</div>'.
+                             '<div class="row">';
+                    while ($the_query -> have_posts() ) {
+                        $the_query->the_post();
+                        $html .= '<div class="col-12 col-md-4 cat-post-item-thumbnail">'.
+                                      '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
+                                      '<img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'">'.
+                                      '<div class="cat-post-item-title">'.get_the_title().'</div>'.
+                                      '</a>'. 
+                                      '</div>'; //end column
+                        if ($postCount == $att['blocknoofstories']) break;
+                        $postCount++;
+                    }
+                    $html .= "</div>".  //end row
+                             "</div>"; //end main block
+                } // end if have posts
+  
                 // Restore original Post Data
                 wp_reset_postData();
 
@@ -484,11 +587,9 @@ defined( 'ABSPATH' ) || die();
             
             } 
 
-
+              //  END CALLBACk for Dynamic E-MC-04 Custom Block   
 
         // Hook into WordPress
         add_action('init','daf_block');
 
     } //end IF01
-
-
