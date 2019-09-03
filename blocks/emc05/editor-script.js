@@ -1,0 +1,111 @@
+//Required components
+
+var { __ } = wp.i18n; // Process to develop plugin so it can easily be translated to other languages
+var { registerBlockType, RichText } = wp.blocks;
+
+registerBlockType("daf/emc05", {
+  title: "DAF - Dynamic block Main Content 05",
+  description: "Feauture Banner and Three Images accross with title",
+  icon: "visibility",
+  category: "common",
+  attributes: {
+    blockcategory: { type: "number", default: 0 },
+    blockfirststory: { type: "number", default: 0 },
+    blocknoofstories: { type: "number", default: 0 },
+    blockstoryid: { type: "array", default: 0 },
+    blockfeaturedbanner: { type: "text" },
+    blockcolumnsondesktop: { type: "number", default: 12 }
+  },
+
+  /* This configures how the content, and sets up the necessary blocks */
+
+  edit: function(props) {
+    console.log("emc05 - edit-props", props);
+    function updateCategory(event) {
+      console.log("Exec function updateCategory");
+      props.setAttributes({ blockcategory: parseInt(event.target.value) });
+    }
+    function updateFirstStory(event) {
+      console.log("Exec function updateFirstStory");
+      props.setAttributes({ blockfirststory: parseInt(event.target.value) });
+    }
+    function updateNoOfStories(event) {
+      console.log("Exec function updateNoOfStories");
+      props.setAttributes({ blocknoofstories: parseInt(event.target.value) });
+    }
+    function updateStoryId(event) {
+      console.log("Exec function updateStoryId");
+      props.setAttributes({ blockstoryid: parseInt(event.target.value) });
+    }
+    function updateColumnsOnDesktop(event) {
+      console.log("Exec function updateColumnsOnDesktop");
+      props.setAttributes({
+        blockcolumnsondesktop: parseInt(event.target.value)
+      });
+    }
+    function updateFeaturedBanner(event) {
+      console.log("Exec function featuredBanner");
+      props.setAttributes({ blockfeaturedbanner: event.target.value });
+    }
+
+    return React.createElement(
+      "div",
+      { className: props.className },
+      React.createElement("h3", null, "E-MC-05"),
+      React.createElement("h4", null, "Featured Banner"),
+      React.createElement("input", {
+        class: "input-field",
+        type: "text",
+        value: props.attributes.blockfeaturedbanner,
+        onChange: updateFeaturedBanner
+      }),
+      React.createElement("h4", null, "Category"),
+      React.createElement("input", {
+        class: "input-field",
+        type: "text",
+        value: props.attributes.blockcategory,
+        onChange: updateCategory
+      }),
+      React.createElement("h4", null, "First Post to load"),
+      React.createElement("input", {
+        class: "input-field",
+        type: "text",
+        value: props.attributes.blockfirststory,
+        onChange: updateFirstStory
+      }),
+      React.createElement("h4", null, "No. of Post"),
+      React.createElement("input", {
+        class: "input-field",
+        type: "text",
+        value: props.attributes.blocknoofstories,
+        onChange: updateNoOfStories
+      }),
+      React.createElement("h4", null, "Post Id list (comma separated)"),
+      React.createElement("input", {
+        class: "input-field",
+        type: "text",
+        value: props.attributes.blockstoryid,
+        onChange: updateStoryId
+      }),
+      React.createElement("h4", null, "Columns in Desktop"),
+      React.createElement(
+        "select",
+        {
+          class: "input-field",
+          value: props.attributes.blockcolumnsondesktop,
+          onChange: updateColumnsOnDesktop
+        },
+        React.createElement("option", { value: "" }, ""),
+        React.createElement("option", { value: "12" }, "12 Columns"),
+        React.createElement("option", { value: "6" }, "6 Columns"),
+        React.createElement("option", { value: "4" }, "4 Columns"),
+        React.createElement("option", { value: "2" }, "2 Columns")
+      )
+    );
+  },
+
+  save: function(props) {
+    console.log("emc02 - save-props", props);
+    return null; // Return controlled by php.
+  }
+}); //End registerBlockType

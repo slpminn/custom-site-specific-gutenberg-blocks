@@ -1,29 +1,39 @@
 .wp-block-daf-emc03 {
- 
-    border-width: 1px;
-    border-style: solid;
-    border-color: #000;
-    padding: 20px;
-    margin: 10px 0px 10px 0px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000;
+  padding: 20px;
+  margin: 10px 0px 10px 0px;
 }
 
 .wp-block-daf-emc03 .cat-title {
-    border: 1px solid darkblue;
-    background: #343a40;
-    color: white;
-    font-weight: bold;
-    font-size: 1.1em;
-    padding: 10px 10px 10px 10px;
+  border: 1px solid darkblue;
+  background: #343a40;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 10px 10px 10px 10px;
 }
 
 .wp-block-daf-emc03 .cat-post-item-title {
-    vertical-align: top;
+  vertical-align: top;
 }
 
 .wp-block-daf-emc03 a.cat-post-item-link:link,
 .wp-block-daf-emc03 a.cat-post-item-link:visited,
-.wp-block-daf-emc03 a.cat-post-item-link:hover, 
+.wp-block-daf-emc03 a.cat-post-item-link:hover,
 .wp-block-daf-emc03 a.cat-post-item-link:active {
-    color: darkslateblue;
+  color: darkslateblue;
 }
 
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .wp-block-daf-emc03 .cat-title {
+    font-size: 0.75em;
+    padding: 2px 2x 2px 2px;
+  }
+
+  .wp-block-daf-emc03 .cat-post-item-title {
+    font-size: 0.5em;
+  }
+}
