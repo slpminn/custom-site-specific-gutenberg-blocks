@@ -84,10 +84,18 @@ registerBlockType("daf/emc02", {
           onChange: updateColumnsOnDesktop
         },
         React.createElement("option", { value: "" }, ""),
-        React.createElement("option", { value: "12" }, "12 Columns"),
-        React.createElement("option", { value: "6" }, "6 Columns"),
-        React.createElement("option", { value: "4" }, "4 Columns"),
-        React.createElement("option", { value: "2" }, "2 Columns")
+				React.createElement("option", {value: "12"}, "12 Columns"),
+				React.createElement("option", {value: "11"}, "11 Columns"),
+				React.createElement("option", {value: "10"}, "10 Columns"),
+				React.createElement("option", {value: "9"}, "9 Columns"),
+				React.createElement("option", {value: "8"}, "8 Columns"),
+				React.createElement("option", {value: "7"}, "7 Columns"),
+				React.createElement("option", {value: "6"}, "6 Columns"),
+				React.createElement("option", {value: "5"}, "5 Columns"),
+				React.createElement("option", {value: "4"}, "4 Columns"),
+				React.createElement("option", {value: "3"}, "3 Columns"),
+				React.createElement("option", {value: "2"}, "2 Columns"),
+				React.createElement("option", {value: "1"}, "1 Column")
       )
     );
   },

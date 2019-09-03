@@ -355,7 +355,7 @@ defined( 'ABSPATH' ) || die();
                     'cat' => $att['blockcategory'],
                     'posts_per_page' => $att['blocknoofstories'],
                      // Optimization Query Parameters//
-                     'nopaging' => true, //false: use pages, true: do not use paging
+                     //'nopaging' => true, //false: use pages, true: do not use paging
                      'udpate_post_term_cache' => false, //grabs terms, remove if terms required
                      'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
                      'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
@@ -367,25 +367,28 @@ defined( 'ABSPATH' ) || die();
 
                 // The Loop
                 if( $the_query->have_posts()) {
-                    $postCount = 1;
-                    $html .= "<div class='wp-block-daf-emc01 col-md-${att['blockcolumnsondesktop']}'>";
-                    $html .= '<div class="cat-title">'.get_cat_name($att['blockcategory']).'</div>';
-                    $html .= '<ul>';
+                   // $postCount = 1;
+                    $html .= "<div class='wp-block-daf-emc01 col-md-${att['blockcolumnsondesktop']}'>".
+                             '<div class="row">'.
+                             '<div class="col-12 cat-title">'.get_cat_name($att['blockcategory']).'</div>';
                     while ($the_query -> have_posts() ) {
                         $the_query->the_post();
-                        $html .= '<li class="cat-post">'.
+                        $html .= '<div class="col-12 col-lg-3 cat-post-item-thumbnail">'.
                                     '<a class="cat-post-item-link" href="'.get_post_permalink().'">'.
-                                    '<div class="row">'.
-                                    '<div class="col-12 col-lg-3 cat-post-item-thumbnail"><img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'"></div>'.
-                                    '<div class="col-12 col-lg-9 cat-post-item-title">'.get_the_title().'</div>'.
-                                    '</div>'.
+                                    '<img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'">'.
                                     '</a>'.
-                                    '</li>';
-                        if ($postCount == $att['blocknoofstories']) break;
-                        $postCount++;
+                                    '</div>'. 
+                                    '<div class="col-12 col-lg-9 cat-post-item-title">'.
+                                    '<a class="cat-post-item-link" href="'.get_post_permalink().'">'.
+                                    get_the_title().
+                                    '</a>'.
+                                    '</div>';
+                                    
+                       // if ($postCount == $att['blocknoofstories']) break;
+                       // $postCount++;
                     }
-                    $html .= '</ul>';
-                    $html .= "</div>";
+                    $html .= '</div>'. //end row
+                             '</div>'; //end block
                 }
                 // Restore original Post Data
                 wp_reset_postData();
@@ -419,13 +422,14 @@ defined( 'ABSPATH' ) || die();
                     'post__in' => get_option('sticky_posts'),
                     'posts_per_page' => $att['blocknoofstories'],
                     // Optimization Query Parameters//
-                    'nopaging' => true, //false: use pages, true: do not use paging,
+                    //'nopaging' => true, //false: use pages, true: do not use paging retrieve all posts found
                     'udpate_post_term_cache' => false, //grabs terms, remove if terms required
                     'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
                     'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
                     'cache_results' => false, // Post information cache
                 );
                 $the_query_sticky = new WP_Query( $args1 ); // Retrieve Sticky Posts
+                //return var_dump($the_query_sticky);
 
                 //Retrieve none Sticky Posts
                 $calc_post_per_page = $att['blocknoofstories'] - count($the_query_sticky->posts);
@@ -433,20 +437,21 @@ defined( 'ABSPATH' ) || die();
                 $args2 = array(
                     'post_type' => 'post',
                     'post_status' => 'publish',
-                    'cat' => $att['blockcategory']+10000,
+                    'cat' => $att['blockcategory'],
                     'post__not_in' => get_option('sticky_posts'),
                     'ignore_sticky_posts' => true,
                     'posts_per_page' => $calc_post_per_page,
+                    'offset' => $offset,
                     // Optimization Query Parameters//
-                    'nopaging' => true, //false: use pages, true: do not use paging
+                    'nopaging' => false, //false: use pages, true: do not use paging retrieve all posts found
                     'udpate_post_term_cache' => false, //grabs terms, remove if terms required
                     'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
                     'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
-                    'cache_results' => false, // Post information cache
+                    'cache_results' => false, // Post information cache 
 
                 );
                 $the_query_other = new WP_Query( $args2 ); // Retrieve Non-Sticky Posts
-                //return var_dump($the_query2);
+                //return var_dump($the_query_other);
 
                 // Merge both queries into one.
                 $the_query_all = new WP_Query(); // Container for all the posts
@@ -465,7 +470,7 @@ defined( 'ABSPATH' ) || die();
                         $the_query_all->the_post();
                         if ($postCount == 1) {
                             if (get_field("acf_post_featured_banner") == 1) {
-                                $html .= '<h2 class="col-12 cat-post-featured-item-banner">Featured Location</h2>';
+                                $html .= '<div class="col-12 cat-post-featured-item-banner">Featured Location</div>';
                             }
                             $html .=  '<div class="col-12 cat-post-featured-item-thumbnail">'.
                                      '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.                                                
@@ -482,18 +487,18 @@ defined( 'ABSPATH' ) || die();
                                      '</div>';
                                 //     '<div class="col-12 cat-post-featured-item-separator"><hr width="75%"/></div>';
                         } else {
-                            $html .=  '<div class="col-12 col-md-10 cat-post-item-title">'.
+                            $html .=  '<div class="col-12 col-md-8 cat-post-item-title">'.
                                       '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
                                       get_the_title().
                                       '</a>'. 
                                       '</div>'.
-                                      '<div class="col-12 col-md-2 cat-post-item-thumbnail">'.
+                                      '<div class="col-12 col-md-4 cat-post-item-thumbnail">'.
                                       '<a class="cat-post-featured-item-link" href="'.get_post_permalink().'">'.
                                       '<img class="img-fluid" src="'.esc_url(get_the_post_thumbnail_url()).'">'.
                                       '</a>'. 
                                       '</div>';
                         }
-                        if ($postCount == $att['blocknoofstories']) break;
+                        //if ($postCount == $att['blocknoofstories']) break;
                         $postCount++;
                     } // end while
                     $html .= "</div>".  //  end row
@@ -526,7 +531,7 @@ defined( 'ABSPATH' ) || die();
                     'cat' => $att['blockcategory'],
                     'posts_per_page' => $att['blocknoofstories'],
                     // Optimization Query Parameters//
-                    'nopaging' => true, //false: use pages, true: do not use paging
+                    //'nopaging' => true, //false: use pages, true: do not use paging
                     'udpate_post_term_cache' => false, //grabs terms, remove if terms required
                     'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
                     'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
@@ -538,14 +543,15 @@ defined( 'ABSPATH' ) || die();
 
                 // The Loop
                 if( $the_query->have_posts()) {
-                    $postCount = 1;
+                    //$postCount = 1;
                     $html .= '<div class="wp-block-daf-emc03 col-md-'.
                              $att['blockcolumnsondesktop'].
                              '">'.
-                            '<div class="cat-title">'.
+                             '<div class="row">'.
+                            '<div class="col-12 cat-title">'.
                              get_cat_name($att['blockcategory']).
-                             '</div>'.
-                             '<div class="row">';
+                             '</div>';
+                             
                     while ($the_query -> have_posts() ) {
                         $the_query->the_post();
                         $html .=  '<div class="col-12 cat-post-item-title">'.
@@ -553,8 +559,8 @@ defined( 'ABSPATH' ) || die();
                                     get_the_title().
                                     '</a>'.
                                     '</div>'; //end column
-                        if ($postCount == $att['blocknoofstories']) break;
-                        $postCount++;
+                        //if ($postCount == $att['blocknoofstories']) break;
+                        //$postCount++;
                     }
                     $html .= "</div>".  //end row
                              "</div>"; //end main block
@@ -585,7 +591,7 @@ defined( 'ABSPATH' ) || die();
                     'cat' => $att['blockcategory'],
                     'posts_per_page' => $att['blocknoofstories'],
                     // Optimization Query Parameters//
-                    'nopaging' => true, //false: use pages, true: do not use paging
+                    //'nopaging' => true, //false: use pages, true: do not use paging
                     'udpate_post_term_cache' => false, //grabs terms, remove if terms required
                     'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
                     'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
@@ -597,7 +603,7 @@ defined( 'ABSPATH' ) || die();
 
                 // The Loop
                 if( $the_query->have_posts()) {
-                    $postCount = 1;
+                   // $postCount = 1;
                     $html .= '<div class="wp-block-daf-emc04 col-md-'.
                              $att['blockcolumnsondesktop'].
                              '">'.
@@ -613,8 +619,8 @@ defined( 'ABSPATH' ) || die();
                                       '<div class="cat-post-item-title">'.get_the_title().'</div>'.
                                       '</a>'. 
                                       '</div>'; //end column
-                        if ($postCount == $att['blocknoofstories']) break;
-                        $postCount++;
+                       // if ($postCount == $att['blocknoofstories']) break;
+                       // $postCount++;
                     }
                     $html .= "</div>".  //end row
                              "</div>"; //end main block
@@ -646,7 +652,7 @@ defined( 'ABSPATH' ) || die();
                     'cat' => $att['blockcategory'],
                     'posts_per_page' => $att['blocknoofstories'],
                     // Optimization Query Parameters//
-                    'nopaging' => true, //false: use pages, true: do not use paging
+                    //'nopaging' => true, //false: use pages, true: do not use paging
                     'udpate_post_term_cache' => false, //grabs terms, remove if terms required
                     'update_post_meta_cache' => false, //grabs post meta, remove if post meta required.
                     'no_found_rows' => true, //make it true when you don't need any pagination and don't need total number of posts.
@@ -658,7 +664,7 @@ defined( 'ABSPATH' ) || die();
 
                 // The Loop
                 if( $the_query->have_posts()) {
-                    $postCount = 1;
+                    //$postCount = 1;
                     $html .= '<div class="wp-block-daf-emc05 col-md-'.
                              $att['blockcolumnsondesktop'].
                              '">'.
@@ -674,8 +680,8 @@ defined( 'ABSPATH' ) || die();
                                       '<div class="cat-post-item-title">'.get_the_title().'</div>'.
                                       '</a>'. 
                                       '</div>'; //end column
-                        if ($postCount == $att['blocknoofstories']) break;
-                        $postCount++;
+                       // if ($postCount == $att['blocknoofstories']) break;
+                       // $postCount++;
                     }
                     $html .= "</div>".  //end row
                              "</div>"; //end main block
