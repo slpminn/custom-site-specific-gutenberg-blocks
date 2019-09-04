@@ -1,0 +1,44 @@
+.wp-block-daf-emc06 {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000;
+  padding: 20px;
+  margin: 10px 0px 10px 0px;
+}
+
+.wp-block-daf-emc06 .row {
+  padding: 0px;
+  margin: 0px;
+}
+
+.wp-block-daf-emc06 .cat-map-title {
+  vertical-align: top;
+  font-size: 100%;
+}
+
+.wp-block-daf-emc06 .map-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+}
+
+.wp-block-daf-emc06 .map-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.wp-block-daf-emc06 .cat-map-embed {
+  margin: 5px 0px 5px 0px;
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .wp-block-daf-emc06 .cat-map-title {
+    font-size: 0.75em;
+    padding: 2px 2x 2px 2px;
+  }
+}

@@ -316,6 +316,43 @@ defined( 'ABSPATH' ) || die();
             );  
             // End of Register Dynamic E-MC-05 Custom Block
 
+ /*
+            Register Dynamic E-MC-06 Custom Block
+             */
+            wp_register_script(
+                'daf-emc06-editor', //name of the script
+                plugins_url('/blocks/emc06/editor-script.js', __FILE__), // URL of script
+                array(  // Dependencies required by Gutenberg
+                    'wp-blocks',
+                    'wp-element'
+                )
+            );
+             // Register global block CSS - Loads on the Front End and the Editor
+            wp_register_style(
+                'daf-emc06', //name of the script
+                plugins_url('/blocks/emc06/style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc06/style.css') // Everytime it is update clear style from cash
+            );
+            // Register editor only block CSS - Loads on the Editor only
+            wp_register_style(
+                'daf-emc06-editor', //name of the script
+                plugins_url('/blocks/emc06/editor-style.css', __FILE__), // URL of style
+                array('wp-edit-blocks'), // Dependencies 
+                filemtime(plugin_dir_path(__FILE__).'/blocks/emc06/editor-style.css') // Everytime it is update clear style from cash
+            );
+            // Register the block type
+            register_block_type(
+                'daf/emc06', //name of the block.(Plugin/Block)
+                array (
+                    'editor_script' => 'daf-emc06-editor',
+                    'editor_style' => 'daf-emc06-editor',
+                    'style' => 'daf-emc06',
+                    'render_callback' => 'dafEMC06CB', // The render callback
+                )
+            );  
+            // End of Register Dynamic E-MC-06 Custom Block
+
         } //end of daf_block()
 
     /**
@@ -696,6 +733,36 @@ defined( 'ABSPATH' ) || die();
 
               //  END CALLBACk for Dynamic E-MC-05 Custom Block   
 
+ /**
+             * CALLBACK Function for Dynamic E-MC-06 Custom Block
+             * Render callback for the dynamic block.
+             * Instead of rendering from the block's save(), this callback will render the front-end
+             * 
+             * @param $att Attributes from the JS Block
+             * @return string Rendered HTML
+             */
+            function dafEMC06CB($att) {
+
+                $html = ""; 
+
+                $html .= '<div class="wp-block-daf-emc06 col-md-'.
+                             $att['blockcolumnsondesktop'].
+                             '">'.
+                             '<div class="row">'.
+                            '<div class="col-12 cat-map-title">'.
+                             $att['blockmaptitle'].
+                             '</div>'.
+                             '<div class="col-12 cat-map-embed map-responsive">'.
+                             $att['blockmaplink'].
+                             '</div>'.                             
+                             '</div>'.  //end row
+                             '</div>'; //end main block
+
+                return $html; 
+            
+            } 
+
+              //  END CALLBACk for Dynamic E-MC-06 Custom Block 
 
         // Hook into WordPress
         add_action('init','daf_block');

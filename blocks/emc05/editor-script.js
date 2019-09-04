@@ -14,7 +14,7 @@ registerBlockType("daf/emc05", {
     blocknoofstories: { type: "number", default: 0 },
     blockstoryid: { type: "array", default: 0 },
     blockfeaturedbanner: { type: "text" },
-    blockcolumnsondesktop: { type: "number", default: 12 }
+    blockcolumnsondesktop: { type: "text", default: 12 }
   },
 
   /* This configures how the content, and sets up the necessary blocks */
@@ -40,7 +40,7 @@ registerBlockType("daf/emc05", {
     function updateColumnsOnDesktop(event) {
       console.log("Exec function updateColumnsOnDesktop");
       props.setAttributes({
-        blockcolumnsondesktop: parseInt(event.target.value)
+        blockcolumnsondesktop: event.target.value
       });
     }
     function updateFeaturedBanner(event) {
@@ -95,7 +95,6 @@ registerBlockType("daf/emc05", {
           value: props.attributes.blockcolumnsondesktop,
           onChange: updateColumnsOnDesktop
         },
-				React.createElement("option", { value: "" }, ""),
 				React.createElement("option", {value: "12"}, "12 Columns"),
 				React.createElement("option", {value: "11"}, "11 Columns"),
 				React.createElement("option", {value: "10"}, "10 Columns"),

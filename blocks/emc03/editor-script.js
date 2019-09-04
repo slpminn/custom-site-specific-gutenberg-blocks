@@ -21,7 +21,7 @@ registerBlockType( 'daf/emc03', {
 		blockfirststory: { type: 'number', default: 0  },
 		blocknoofstories: { type: 'number', default: 0  },
 		blockstoryid: { type: 'number', default: 0 },
-		blockcolumnsondesktop: { type: 'number', default: 12 },
+		blockcolumnsondesktop: { type: 'text', default: 12 },
 	},
 
 	/* This configures how the content, and sets up the necessary blocks */
@@ -46,7 +46,7 @@ registerBlockType( 'daf/emc03', {
 		}
 		function updateColumnsOnDesktop(event) {
 			console.log('Exec function updateColumnsOnDesktop');
-			props.setAttributes({blockcolumnsondesktop: parseInt(event.target.value)})
+			props.setAttributes({blockcolumnsondesktop: event.target.value})
 		}
 
 		return React.createElement(
@@ -63,7 +63,6 @@ registerBlockType( 'daf/emc03', {
 			React.createElement("input", { class: "input-field", type: "text", value: props.attributes.blockstoryid, onChange: updateStoryId }),
 			React.createElement("h4", null, "Columns in Desktop"),
 			React.createElement("select", { class: "input-field", value: props.attributes.blockcolumnsondesktop, onChange: updateColumnsOnDesktop }, 			
-				React.createElement("option", { value: "" }, ""),
 				React.createElement("option", {value: "12"}, "12 Columns"),
 				React.createElement("option", {value: "11"}, "11 Columns"),
 				React.createElement("option", {value: "10"}, "10 Columns"),
