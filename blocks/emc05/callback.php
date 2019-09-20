@@ -1,6 +1,6 @@
 <?php
 /**
-             * CALLBACK Function for Dynamic E-MC-05 Custom Block
+             * CALLBACK Function for Dynamic E-MC-05 Custom Blocks
              * Render callback for the dynamic block.
              * Instead of rendering from the block's save(), this callback will render the front-end
              * 
